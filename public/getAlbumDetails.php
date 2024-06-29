@@ -2,21 +2,22 @@
 header('Content-Type: application/json');
 
 if (isset($_GET['id'])) {
-    $albumId = $_GET['id'];
-    $url = "https://musicbrainz.org/ws/2/release-group/$albumId?inc=artists+releases&fmt=json";
+    $albumId = urlencode($_GET['id']);
+    $url = "https://musicbrainz.org/ws/2/release-group/$albumId?fmt=json";
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-        'User-Agent: YourAppName/1.0 ( yourname@example.com )'
+        'User-Agent: YourAppName/1.0 (yourname@example.com)'
     ));
     $response = curl_exec($ch);
     $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
 
     if ($httpcode == 200) {
-        echo $response;
+        $data = json_decode($response, true);
+        echo json_encode($data);
     } else {
         error_log("MusicBrainz API Error: HTTP $httpcode - $response");
         echo json_encode(['error' => 'Failed to fetch data from MusicBrainz API', 'status_code' => $httpcode]);

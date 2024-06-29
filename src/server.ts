@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import { exec } from 'child_process';
 import axios from 'axios';
 
 const app = express();
@@ -6,6 +7,20 @@ const PORT = process.env.PORT || 4000;
 
 app.use(express.static('public'));
 
+// Handle PHP files
+app.get('*.php', (req: Request, res: Response) => {
+    const phpFile = `public${req.path}`;
+    exec(`php ${phpFile}`, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`exec error: ${error}`);
+            res.status(500).send(`Server Error: ${stderr}`);
+            return;
+        }
+        res.send(stdout);
+    });
+});
+
+// Other routes for the API
 app.get('/artist/:name', async (req: Request, res: Response) => {
     try {
         const { name } = req.params;
