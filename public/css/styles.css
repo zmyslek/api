@@ -1,0 +1,408 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #2C2F33;
+    color: white;
+}
+
+nav {
+    background-color: #23272A;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-left, .navbar-right, .navbar-center {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-right {
+    margin-left: auto;
+}
+
+.navbar-center {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+nav a, .dropbtn, i {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown .dropbtn {
+    display: flex;
+    align-items: center;
+}
+
+.dropdown .dropbtn i {
+    margin-left: 5px;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 36px;
+    font-weight: bolder;
+    letter-spacing: 0.1em;
+    color: #7289DA;
+    text-shadow: 2px 2px 4px #23272A;
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+input {
+    padding: 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+button {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background-color: #7289DA;
+    color: white;
+    cursor: pointer;
+}
+
+#artist-results, #album-results {
+    white-space: pre-wrap;
+    margin: 20px auto;
+    width: 100%;
+    background-color: #23272A;
+    padding: 20px;
+    border: 1px solid #ddd;
+    color: white;
+    border-radius: 5px;
+}
+
+/* Style for the numbers in the ordered list */
+ol {
+    list-style-type: none;
+    counter-reset: item;
+    padding-left: 0;
+    margin-left: 20px;
+}
+
+ol li {
+    counter-increment: item;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+ol li::before {
+    content: counter(item);
+    margin-right: 10px;
+    font-weight: bold;
+    font-size: 36px;
+    color: #7289DA;
+    font-family: 'Lucida Handwriting', cursive;
+}
+
+/* List item text style */
+ol li a {
+    text-decoration: none;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+}
+
+ol li a:hover {
+    text-decoration: underline;
+}
+
+/* Artist Page Styles */
+.artist-details {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin: 20px;
+    padding: 20px;
+    font-size: 24px;
+}
+
+.albums {
+    text-align: center;
+    width: 100%;
+}
+
+.album {
+    margin-bottom: 10px;
+}
+
+.album-cover {
+    width: 200px;
+    height: 200px;
+}
+
+.about {
+    text-align: center;
+    width: 100%;
+    margin-top: 40px;
+}
+
+.about p {
+    background-color: #7289DA;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    display: inline-block;
+    text-align: left;
+    font-size: 20px;
+    width: 100%;
+}
+
+.singles {
+    margin-top: 20px;
+    text-align: center;
+    width: 100%;
+}
+
+#singles {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-family: 'Roboto', sans-serif;
+    color: white;
+    list-style-type: none;
+    padding-left: 0;
+    font-size: 24px;
+    margin-left: 20px;
+}
+
+#singles li::before {
+    content: "♪";
+    color: #7289DA;
+    font-size: 28px;
+    margin-right: 10px;
+}
+
+.single {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.section-title {
+    font-family: 'Roboto', sans-serif;
+    font-size: 32px;
+    color: #7289DA;
+    margin-bottom: 20px;
+    text-transform: capitalize;
+}
+
+footer {
+    background-color: #23272A;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer-content a {
+    color: white;
+    margin: 0 10px;
+    font-size: 24px;
+}
+
+/* New styles for album.html */
+.album-container {
+    display: flex;
+    justify-content: space-between;
+    margin-left: 10px;
+    padding: 0;
+    flex-wrap: wrap;
+}
+
+.album-cover-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    height: 300px; /* Adjust height for better display on mobile */
+}
+
+.album-cover {
+    margin: 0;
+    padding: 0;
+    width: auto;
+    height: 100%;
+    object-fit: cover;
+}
+
+.album-info {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    text-align: center;
+}
+
+.album-info h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+    color: #7289DA;
+}
+
+.album-info h2 {
+    font-size: 24px;
+    color: #CCCCCC;
+    margin-bottom: 20px;
+}
+
+.album-info h3 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #7289DA;
+}
+
+#songs {
+    list-style-type: none;
+    padding-left: 0;
+    margin-left: 20px;
+    width: 100%;
+}
+
+#songs li {
+    margin-bottom: 10px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+}
+
+#songs li::before {
+    content: "♪";
+    color: #7289DA;
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.album-year {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: #23272A;
+    color: white;
+    padding: 10px 20px;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+/* Media Queries for Mobile */
+@media (max-width: 768px) {
+    .artist-details, .album-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .albums, .about, .album-cover-container, .album-info {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .album-cover {
+        width: 100%;
+        height: auto;
+    }
+
+    .album-info {
+        padding-left: 0;
+        text-align: center;
+    }
+
+    .album-info h1, .album-info h2 {
+        text-align: center;
+    }
+
+    .album-year {
+        position: relative;
+        margin-top: 20px;
+    }
+
+    .about p, #songs {
+        width: 100%;
+    }
+
+    nav {
+        justify-content: center;
+    }
+
+    .navbar-left {
+        display: none;
+    }
+
+    h1 {
+        font-size: 36px;
+    }
+
+    .section-title {
+        font-size: 24px;
+    }
+
+    #songs li::before, .section-title, #songs li::before, .album-info h3, .album-info h1, #singles li::before, ol li::before, button, h1 {
+        color: #FF66C4;
+    }
+    .about p {
+        background-color: #FF66C4;
+    }
+    body {
+        background-color: black;
+    }
+    footer, nav {
+        background-color: #F4A9D7;
+    }
+}
