@@ -3,70 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Album - MusicBrainz API</title>
     <link rel="stylesheet" href="css/styles.css">
-    <title>Album Details</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <nav>
     <div class="navbar-left">
-        <a href="index.html">Home</a>
+        <a href="index.html"><i class="fa fa-home"></i></a>
     </div>
     <div class="navbar-center">
-        MusicBrainz API
-    </div>
-    <div class="navbar-right">
-        <div class="dropdown">
-            <button class="dropbtn">Menu <i class="fa fa-caret-down"></i></button>
-            <div class="dropdown-content">
-                <a href="index.html">Home</a>
-            </div>
-        </div>
+        MusicBrainz
     </div>
 </nav>
 <div class="album-container">
     <div class="album-cover-container">
-        <img id="album-cover" class="album-cover" src="" alt="Album Cover">
+        <img id="album-cover" src="" alt="Album Cover" class="album-cover">
     </div>
     <div class="album-info">
         <h1 id="album-title"></h1>
         <h2 id="album-artist"></h2>
-        <h3 id="album-year"></h3>
-        <ol id="songs"></ol>
+        <h3>Songs</h3>
+        <ul id="songs"></ul>
+        <div class="album-year">
+            <span id="release-year"></span>
+        </div>
     </div>
 </div>
 
+<footer>
+    <div class="footer-content">
+        <a href="https://musicbrainz.org"><i class="fa fa-globe"></i></a>
+        <a href="mailto:info@musicbrainz.org"><i class="fa fa-envelope"></i></a>
+    </div>
+</footer>
+
 <script>
-    document.addEventListener('DOMContentLoaded', async () => {
+    document.addEventListener('DOMContentLoaded', async function() {
         const params = new URLSearchParams(window.location.search);
         const albumId = params.get('id');
-        if (!albumId) {
-            document.getElementById('album-info').innerText = 'No album ID provided';
-            return;
-        }
 
         try {
-            const response = await fetch(`/getAlbumDetails.php?id=${albumId}`);
-            const data = await response.json();
-            if (data.error) {
-                document.getElementById('album-info').innerText = data.error;
-            } else {
-                document.getElementById('album-cover').src = `https://coverartarchive.org/release-group/${albumId}/front-500`;
-                document.getElementById('album-title').innerText = data.title;
-                document.getElementById('album-artist').innerText = data['artist-credit'][0].name;
-                document.getElementById('album-year').innerText = new Date(data['first-release-date']).getFullYear();
+            const response = await fetch(`getAlbumDetails.php?id=${albumId}`);
+            if (!response.ok) throw new Error('Failed to fetch album details');
+            const albumData = await response.json();
+            console.log('Album Details Response:', albumData);
 
-                const recordings = data.relations.filter(rel => rel.type === 'recording');
-                recordings.forEach((recording, index) => {
-                    const li = document.createElement('li');
-                    li.innerText = recording.title;
-                    document.getElementById('songs').appendChild(li);
-                });
+            if (albumData.title && albumData['artist-credit'] && albumData['artist-credit'].length > 0) {
+                const albumTitle = albumData.title;
+                const artistName = albumData['artist-credit'][0].name;
+
+                document.getElementById('album-title').textContent = albumTitle;
+                document.getElementById('album-artist').textContent = artistName;
+                document.getElementById('release-year').textContent = albumData['first-release-date'] ? new Date(albumData['first-release-date']).getFullYear() : '';
+
+                const coverArtUrl = `https://coverartarchive.org/release-group/${albumId}/front-250`;
+                document.getElementById('album-cover').src = coverArtUrl;
+
+                const songsContainer = document.getElementById('songs');
+                songsContainer.innerHTML = '';
+
+                if (albumData.releases && albumData.releases.length > 0) {
+                    const releaseId = albumData.releases[0].id;
+                    const recordingsResponse = await fetch(`https://musicbrainz.org/ws/2/recording?release=${releaseId}&fmt=json`);
+                    if (!recordingsResponse.ok) throw new Error('Failed to fetch recordings');
+                    const recordingsData = await recordingsResponse.json();
+                    console.log('Recordings Data:', recordingsData);
+
+                    for (const recording of recordingsData.recordings) {
+                        const songItem = document.createElement('li');
+                        songItem.className = 'single';
+                        songItem.textContent = recording.title;
+                        songsContainer.appendChild(songItem);
+                    }
+                } else {
+                    songsContainer.textContent = 'No songs found.';
+                }
+            } else {
+                document.getElementById('album-title').textContent = 'Album not found.';
+                document.getElementById('album-artist').textContent = '';
+                document.getElementById('songs').textContent = '';
             }
         } catch (error) {
             console.error('Error fetching album data:', error);
-            document.getElementById('album-info').innerText = 'Error fetching album data';
+            document.getElementById('album-title').textContent = 'Error fetching album information.';
+            document.getElementById('album-artist').textContent = '';
+            document.getElementById('songs').textContent = '';
         }
     });
 </script>
+
 </body>
 </html>
