@@ -3,105 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artist - MusicBrainz API</title>
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Artist Details</title>
 </head>
 <body>
 <nav>
     <div class="navbar-left">
-        <a href="index.html"><i class="fa fa-home"></i></a>
+        <a href="index.html">Home</a>
     </div>
-</nav>
-<h1 id="artist-name"></h1>
-<div class="artist-details">
-    <div class="albums">
-        <h2 class="section-title">Albums</h2>
-        <div id="albums"></div>
+    <div class="navbar-center">
+        MusicBrainz API
     </div>
-    <div class="about">
-        <h2 class="section-title">About the artist</h2>
-        <p id="about"></p>
-        <div class="singles">
-            <h2 class="section-title">Singles</h2>
-            <ul id="singles"></ul>
+    <div class="navbar-right">
+        <div class="dropdown">
+            <button class="dropbtn">Menu <i class="fa fa-caret-down"></i></button>
+            <div class="dropdown-content">
+                <a href="index.html">Home</a>
+            </div>
         </div>
     </div>
-</div>
-
-<footer>
-    <div class="footer-content">
-        <a href="https://musicbrainz.org"><i class="fa fa-globe"></i></a>
-        <a href="mailto:info@musicbrainz.org"><i class="fa fa-envelope"></i></a>
-    </div>
-</footer>
+</nav>
+<div id="artist-results"></div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', async function() {
+    document.addEventListener('DOMContentLoaded', async () => {
         const params = new URLSearchParams(window.location.search);
         const artistName = params.get('name');
-        document.getElementById('artist-name').textContent = artistName;
+        if (!artistName) {
+            document.getElementById('artist-results').innerText = 'No artist name provided';
+            return;
+        }
 
         try {
-            const response = await fetch(`getArtistDetails.php?name=${encodeURIComponent(artistName)}`);
-            if (!response.ok) throw new Error('Failed to fetch artist details');
-            const artistData = await response.json();
-            if (artistData.error) throw new Error(artistData.error);
-
-            console.log('Artist Data:', artistData);
-
-            if (artistData.artists && artistData.artists.length > 0) {
-                const artist = artistData.artists[0];
-                const artistId = artist.id;
-
-                // Fetch and display albums
-                const albumsResponse = await fetch(`https://musicbrainz.org/ws/2/release-group?artist=${artistId}&type=album&fmt=json`);
-                if (!albumsResponse.ok) throw new Error('Failed to fetch artist albums');
-                const albumsData = await albumsResponse.json();
-                console.log('Albums Data:', albumsData);
-
-                const albumsContainer = document.getElementById('albums');
-                albumsContainer.innerHTML = '';
-                for (const album of albumsData['release-groups']) {
-                    const albumDiv = document.createElement('div');
-                    const coverArtUrl = `https://coverartarchive.org/release-group/${album.id}/front-250`;
-                    albumDiv.className = 'album';
-                    albumDiv.innerHTML = `
-                        <a href="album.html?id=${album.id}">
-                            <img src="${coverArtUrl}" alt="${album.title}" class="album-cover">
-                        </a>
-                    `;
-                    albumsContainer.appendChild(albumDiv);
-                }
-
-                // Fetch and display singles
-                const singlesResponse = await fetch(`https://musicbrainz.org/ws/2/release-group?artist=${artistId}&type=single&fmt=json`);
-                if (!singlesResponse.ok) throw new Error('Failed to fetch artist singles');
-                const singlesData = await singlesResponse.json();
-                console.log('Singles Data:', singlesData);
-
-                const singlesContainer = document.getElementById('singles');
-                singlesContainer.innerHTML = '';
-                for (const single of singlesData['release-groups']) {
-                    const singleItem = document.createElement('li');
-                    singleItem.className = 'single';
-                    singleItem.textContent = single.title;
-                    singlesContainer.appendChild(singleItem);
-                }
-
-                // Display artist information
-                const aboutText = artist.disambiguation ? artist.disambiguation : 'No additional information available.';
-                document.getElementById('about').textContent = aboutText;
+            const response = await fetch(`/getArtistDetails.php?name=${artistName}`);
+            const data = await response.json();
+            if (data.error) {
+                document.getElementById('artist-results').innerText = data.error;
             } else {
-                document.getElementById('about').textContent = 'No artist details found.';
+                document.getElementById('artist-results').innerText = JSON.stringify(data, null, 2);
             }
         } catch (error) {
             console.error('Error fetching artist data:', error);
-            document.getElementById('about').textContent = 'Error fetching artist information.';
+            document.getElementById('artist-results').innerText = 'Error fetching artist data';
         }
     });
 </script>
-
 </body>
 </html>

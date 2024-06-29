@@ -20,7 +20,6 @@ app.get('*.php', (req: Request, res: Response) => {
     });
 });
 
-// Other routes for the API
 app.get('/artist/:name', async (req: Request, res: Response) => {
     try {
         const { name } = req.params;
